@@ -1,0 +1,12 @@
+#!/bin/ksh
+file_dir=/alpha/postgres-dvpostgres92/data/pg_log/
+day=`date|awk '{print $1}'`
+file_name=`echo "postgresql-$day.csv"`
+echo $file_name
+full_file_name=`echo "$file_dir$file_name"`
+echo $full_file_name
+dbservername=`psql -c "\! uname -n"`
+echo $dbservername
+psql metricstest metrics << EOF
+\copy hostname_postgres_log_addition from '$full_file_name' with CSV
+EOF
